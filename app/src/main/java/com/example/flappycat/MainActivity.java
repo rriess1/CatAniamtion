@@ -12,12 +12,17 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.Random;
+
+
 public class MainActivity extends AppCompatActivity {
+
+    AsteroidView asteroidView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        // setContentView(R.layout.activity_main);
         asteroidView = new AsteroidView(this);
         setContentView(asteroidView);
     }
@@ -161,4 +166,5 @@ public class MainActivity extends AppCompatActivity {
         // Tell the gameView pause method to execute
         asteroidView.pause();
     }
+
 }
