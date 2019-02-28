@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         Thread gameThread = null;
         SurfaceHolder ourHolder;
         volatile boolean playing;
-        boolean paused = true;
+        boolean paused = false;
         Canvas canvas;
         Paint paint;
         int y;
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         int dx, dy;
         int height, width;
         boulder[] b;
+        ship s;
 
         private long thisTimeFrame;
         public AsteroidView(Context context) {
@@ -51,19 +52,25 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             Random r = new Random();
-            b = new boulder[5];
+            b = new boulder[20];
+            s = new ship();
             posx = 50;
             posy = 50;
             dx = 20;
             dy = 45;
-            for (int i = 0; i < 5; ++i) {
+            for (int i = 0; i < 20; ++i) {
                 b[i] = new boulder();
                 b[i].x = r.nextInt(50);
                 b[i].y = r.nextInt(50);
                 b[i].dx = r.nextInt(30) - 15;
                 b[i].dy = r.nextInt(30) - 15;
-                b[i].diameter = 95;
+                b[i].diameter = 45;
             }
+
+            s.x = 250;
+            s.y = 250;
+            s.dx = 250;
+            s.dy = 250;
 
 
             while (playing)
@@ -73,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 draw();
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(20);
                 } catch (InterruptedException e) {
 
                 }
@@ -84,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
             if (y > 200)
                 y = 5;
 
+
             posx += dx;
             posy += dy;
             if ((posx > width) || (posx < 0))
@@ -91,8 +99,9 @@ public class MainActivity extends AppCompatActivity {
             if ((posy > height) || (posy < 0))
                 dy = -dy;
 
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < 20; ++i)
                 b[i].update();
+
 
         }
         public void draw() {
@@ -104,19 +113,23 @@ public class MainActivity extends AppCompatActivity {
                 height = canvas.getHeight();
 
                 // Draw the background color
-                canvas.drawColor(Color.argb(255, 26, 128, 182));
+                canvas.drawColor(Color.argb(255, 0, 0, 0));
 
                 // Choose the brush color for drawing
                 paint.setColor(Color.argb(255, 255, 255, 255));
-                canvas.drawLine(0, 0, 300, y, paint);
 
 
                 // canvas.drawCircle(posx, posy, 30l, paint);
-                for (int i = 0; i < 5; ++i) {
+
+                canvas.drawCircle(300, 500, 20, paint);
+
+                for (int i = 0; i < 20; ++i) {
                     b[i].width = width;
                     b[i].height = height;
                     b[i].draw(canvas, paint);
                 }
+                    s.draw(canvas, paint);
+
 
                 // canvas.drawCircle(b.x, b.y, 50, paint);
 
@@ -142,8 +155,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onTouchEvent(MotionEvent motionEvent) {
-            if (motionEvent.getAction() == android.view.MotionEvent.ACTION_DOWN)
-                paused = !paused;
+
+            if (motionEvent.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+                System.out.println("running");
+                s.update();
+            }
             return true;
         }
     }
